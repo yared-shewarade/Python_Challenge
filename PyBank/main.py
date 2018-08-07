@@ -1,0 +1,157 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import os\n",
+    "import csv"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "csvpath = os.path.join(os.getcwd(), \"Resources\", \"budget_data.csv\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "with open(csvpath, newline='') as csvdata:\n",
+    "    budget = csv.reader(csvdata, delimiter=',')\n",
+    "    next(budget, None)\n",
+    "    csvdata = list(budget)\n",
+    "    dates = []\n",
+    "    revenues = []\n",
+    "    \n",
+    "    for row in csvdata:\n",
+    "        dates.append(row[0])\n",
+    "        revenues.append(int(row[1]))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "revchange = []"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "revchange = [revenues[i+1] - revenues[i] for i in range(len(revenues) -1)]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 40,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from statistics import mean\n",
+    "max_change = max(revchange)\n",
+    "big_loss = min(revchange)\n",
+    "avg_change = mean(revchange)\n",
+    "total_month = len(dates)\n",
+    "total_revenue = sum(revenues)\n",
+    "max_month = None\n",
+    "loss_month = None"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 44,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "initial_val = None\n",
+    "for row in csvdata:\n",
+    "    if initial_val is None:\n",
+    "        initial_val = int(row[1])\n",
+    "        continue\n",
+    "    if int(row[1]) - initial_val == big_loss:\n",
+    "        loss_month = row[0]\n",
+    "    initial_val = int(row[1])\n",
+    "\n",
+    "initial_val2 = None\n",
+    "for row in csvdata:\n",
+    "    if initial_val2 is None:\n",
+    "        initial_val2 = int(row[1])\n",
+    "        continue\n",
+    "    if abs(int(row[1]) - initial_val2) == max_change:\n",
+    "        max_month = row[0]\n",
+    "    initial_val2 = int(row[1])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 45,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Financial Analysis\n",
+      "-------------------------------------------------------\n",
+      "Total Months: 86\n",
+      "Total Months $38382578\n",
+      "Average Change: $-2315.1176470588234\n",
+      "Greatest Increase in Profits: $Feb-12 $1926159\n",
+      "Greatest Decrease in Profits: $Sep-13 $-2196167\n"
+     ]
+    }
+   ],
+   "source": [
+    "    print(\"Financial Analysis\")\n",
+    "    print(\"-------------------------------------------------------\")\n",
+    "    print(\"Total Months:\" + \" \" + str(total_month))\n",
+    "    print(\"Total Months\" + \" \" + \"$\" + str(total_revenue))\n",
+    "    print(\"Average Change:\" \" \" + \"$\" + str(avg_change))\n",
+    "    print(\"Greatest Increase in Profits:\" + \" \" + \"$\"  + str(max_month) + \" \" + \"$\" + str(max_change))\n",
+    "    print(\"Greatest Decrease in Profits:\" + \" \" + \"$\" + str(loss_month) + \" \" + \"$\" + str(big_loss))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.6.5"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
